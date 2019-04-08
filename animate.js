@@ -14,13 +14,7 @@ function keyDownFn(e) {
   currentKeys[e.keyCode] = true;
   console.log(e.keyCode);
 
-  const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
-  const bat1View = document.querySelector(".bat");
-  if (!audio) return;
-  audio.currentTime = 0;
-  audio.play();
-
-  bat1View.classList.add("playing");
+  if (e.keyCode !== 38 && e.keyCode !== 40) return;
 
   if (e.keyCode === 38) {
     bat.velocityTop = -0.2;
@@ -39,12 +33,6 @@ function keyUpFn(e) {
 }
 
 const bat1View = document.querySelector(".bat");
-// bat1View.addEventListener("transitionend", removeTransition);
-// function removeTransition(e) {
-//   if (e.propertyName === "transform") {
-//     this.classList.remove("playing");
-//   }
-// }
 
 const ball = new Ball(760, 50, 40, 40);
 
@@ -63,11 +51,9 @@ let t1 = window.performance.now(); // time when page loadded
 function updateFrame(t0) {
   if (ball.left + ball.width > 800 || ball.left < 0) {
     ball.velocityLeft = -ball.velocityLeft;
-    // container.style.backgroundColor = makeColor();
   }
   if (ball.top + ball.height > 800 || ball.top < 0) {
     ball.velocityTop = -ball.velocityTop;
-    // container.style.backgroundColor = makeColor();
   }
 
   ball.move(t0 - t1);
@@ -79,12 +65,9 @@ function updateFrame(t0) {
 
   if (bat.top + bat.height >= 800) {
     bat.top = 800 - bat.height;
-
-    // container.style.backgroundColor = makeColor();
   }
   if (bat.top <= 0) {
     bat.top = 0;
-    // container.style.backgroundColor = makeColor();
   }
 
   t1 = t0;
@@ -94,15 +77,3 @@ requestAnimationFrame(function frame(t) {
   updateFrame(t);
   requestAnimationFrame(frame);
 });
-
-function makeColor() {
-  let hex = "#";
-  const colorHex = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F"];
-  for (let i = 0; i < 6; i++) {
-    let random = colorHex[Math.floor(Math.random() * 16)];
-
-    hex += random;
-  }
-
-  return hex;
-}
