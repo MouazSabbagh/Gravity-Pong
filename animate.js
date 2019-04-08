@@ -2,6 +2,7 @@
 
 import { Ball } from "./ball.js";
 import { Bat } from "./bat.js";
+import { detectBoundaryCollision } from './collisions.js';
 
 const container = document.querySelector(".container");
 
@@ -49,7 +50,42 @@ let t1 = window.performance.now(); // time when page loadded
 // console.log(t1);
 
 function updateFrame(t0) {
-  if (ball.left + ball.width > 800 || ball.left < 0) {
+  const duration = t0 - t1;
+
+
+
+
+
+
+  // Stephen's collision detector test -----------------------------------------
+  //
+  // This collision detector takes care of the right boundary of the container
+  // by interpolating the path of the ball from the start to the end of the
+  // frame and finding out at exactly which point it hits
+  const collision = detectBoundaryCollision(ball, { top: 0, left: 760, height: 800 }, t1, t0);
+
+  // If collision has been detected...
+  if (collision) {
+    console.log(collision);
+
+    // New (reflected) position
+    const p2 = {
+        0: collision.pCollision[0] - (collision.p1[0] - collision.pCollision[0]),
+        1: collision.p1[1]
+    };
+
+    ball.velocityLeft *= -1;
+    t1 = t0;
+    return;
+  }
+  // End of Stephen's collision detector ---------------------------------------
+
+
+
+
+
+
+  if (/*ball.left + ball.width > 800 || */ball.left < 0) {
     ball.velocityLeft = -ball.velocityLeft;
   }
   if (ball.top + ball.height > 800 || ball.top < 0) {
@@ -83,7 +119,7 @@ requestAnimationFrame(function frame(t) {
 function touch(ball, bat) {
   // console.log(ball.left, bat.left + bat.width);
   if (ball.left + 10 <= bat.left + bat.width) {
-    console.log(bat.left + bat.width);
+    //console.log(bat.left + bat.width);
     ball.velocityLeft = -ball.velocityLeft;
   }
 
