@@ -57,6 +57,7 @@ function updateFrame(t0) {
   }
 
   ball.move(t0 - t1);
+
   ball1View.style.left = ball.left + "px";
   ball1View.style.top = ball.top + "px";
 
@@ -69,6 +70,7 @@ function updateFrame(t0) {
   if (bat.top <= 0) {
     bat.top = 0;
   }
+  touch(ball, bat);
 
   t1 = t0;
 }
@@ -77,3 +79,13 @@ requestAnimationFrame(function frame(t) {
   updateFrame(t);
   requestAnimationFrame(frame);
 });
+
+function touch(ball, bat) {
+  // console.log(ball.left, bat.left + bat.width);
+  if (ball.left + 10 <= bat.left + bat.width) {
+    console.log(bat.left + bat.width);
+    ball.velocityLeft = -ball.velocityLeft;
+  }
+
+  // ball.velocityleft = -ball.velocityleft;
+}
