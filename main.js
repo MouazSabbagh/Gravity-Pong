@@ -1,6 +1,6 @@
 import { container } from "./animate.js";
 import { functions, Stream, Observer } from "./sparky/module.js";
-// import { playHitBat } from "./sound.js";
+import { playHitBat } from "./sound.js";
 
 functions["pong"] = function(node, scopes, params) {
   //   console.log("PONG", node);
@@ -9,4 +9,4 @@ functions["pong"] = function(node, scopes, params) {
 };
 
 window.c = Observer(container);
-// window.p = playHitBat;
+window.p = playHitBat;

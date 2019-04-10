@@ -87,7 +87,9 @@ const setup = {
     }
   ]
 };
-const stage = new Soundstage(setup);
+const stage = new Soundstage(setup, {
+  baseURL: "http://127.0.0.1:58863/soundstage"
+});
 
 export default stage;
 export function playHitBat() {
