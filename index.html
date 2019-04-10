@@ -9,21 +9,27 @@
   </head>
   <body>
     
+    <template id ='ball'>
+        <div style ='left:{[left]}px; top:{[top]}px; height:{[height]}px; width:{[width]}px;' class="ball" ></div>
+    </template>
 
-    <div class="container">
-      <div class="ball" id='ball-1'></div>
-      <div class="bat" id='bat-1'></div>
-      <div class="hit"><h1>Kick the ball..</h1></div>
-      
-      
-      
-    </div>
+    <template id ='bat'>
+        <div style ='left:{[left]}px; top:{[top]}px; height:{[height]}px; width:{[width]}px;' class="bat" ></div>
+    </template>
+
+    <template is="sparky" fn="pong">
+      <div class="container">
+        <template fn="get:objects each" include = "#{[type]}"></template>
+        <div class="hit"><h1>Kick the ball..</h1></div>
+      </div>
+    </template>
     
     <audio data-key="38" src="sounds/kick.wav"></audio>
     <audio data-key="40" src="sounds/boom.wav"></audio>
 
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.1/TweenMax.min.js"></script> -->
 
-    <script type = 'module' src="animate.js"></script>
+    <script >window.DEBUG=false;</script>
+    <script type = 'module' src='main.js'></script>
   </body>
 </html>

@@ -1,26 +1,34 @@
 // MODEL code
-
+import { Observer } from "./sparky/module.js";
 import { Ball } from "./ball.js";
 import { Bat } from "./bat.js";
+import { Container } from "./container.js";
+export const container = new Container();
 
-const container = document.querySelector(".container");
+const bat = new Bat(30, 50, 30, 120); // today
+const bat1 = new Bat(740, 500, 30, 120);
 
-const bat = new Bat(50, 50, 30, 120); // today
+container.objects.push(bat, bat1);
+
+console.log(container);
 
 window.addEventListener("keydown", keyDownFn);
 const currentKeys = {};
 function keyDownFn(e) {
   if (currentKeys[e.keyCode]) return;
-  currentKeys[e.keyCode] = true;
   console.log(e.keyCode);
+  currentKeys[e.keyCode] = true;
 
   if (e.keyCode !== 38 && e.keyCode !== 40) return;
 
+  console.log("CHANGE VEL");
   if (e.keyCode === 38) {
     bat.velocityTop = -0.2;
+    bat1.velocityTop = -0.2;
   }
   if (e.keyCode === 40) {
     bat.velocityTop = 0.2;
+    bat1.velocityTop = -0.2;
   }
 }
 
@@ -30,20 +38,15 @@ function keyUpFn(e) {
   if (e.keyCode !== 38 && e.keyCode !== 40) return;
 
   bat.velocityTop = 0;
+  bat1.velocityTop = 0;
 }
 
-const bat1View = document.querySelector(".bat");
-
 const ball = new Ball(760, 50, 40, 40);
+container.objects.push(ball);
 
 // VIEW code
 
-const ball1View = document.querySelector("#ball-1");
-ball1View.style.left = ball.left + "px";
-ball1View.style.width = ball.width + "px";
-ball1View.style.height = ball.height + "px";
-ball1View.style.top = ball.top + "px";
-bat1View.style.top = ball.top + "px"; // today
+// bat thing
 
 let t1 = window.performance.now(); // time when page loadded
 // console.log(t1);
@@ -55,20 +58,17 @@ function updateFrame(t0) {
   if (ball.top + ball.height > 800 || ball.top < 0) {
     ball.velocityTop = -ball.velocityTop;
   }
+  container.objects.forEach(obj => Observer(obj).move(t0 - t1));
 
-  ball.move(t0 - t1);
+  // Observer(ball).move(t0 - t1);
 
-  ball1View.style.left = ball.left + "px";
-  ball1View.style.top = ball.top + "px";
-
-  bat.move(t0 - t1); // today
-  bat1View.style.top = bat.top + "px";
+  // Observer(bat).move(t0 - t1); // today
 
   if (bat.top + bat.height >= 800) {
-    bat.top = 800 - bat.height;
+    Observer(bat).top = 800 - bat.height;
   }
   if (bat.top <= 0) {
-    bat.top = 0;
+    Observer(bat).top = 0;
   }
   touch(ball, bat);
 
@@ -81,9 +81,17 @@ requestAnimationFrame(function frame(t) {
 });
 
 function touch(ball, bat) {
+  const r = ball.width / 2;
   // console.log(ball.left, bat.left + bat.width);
-  if (ball.left + 10 <= bat.left + bat.width) {
-    console.log(bat.left + bat.width);
+  if (
+    (ball.left <= bat.left + bat.width &&
+      ball.top + 2 * r >= bat.top &&
+      ball.top <= bat.top + bat.height) ||
+    (ball.left <= bat.left + bat.width &&
+      ball.top >= bat.top &&
+      ball.top <= bat.top + bat.height)
+  ) {
+    console.log("thouched");
     ball.velocityLeft = -ball.velocityLeft;
   }
 

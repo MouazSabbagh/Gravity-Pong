@@ -9,3 +9,5 @@ export function Bat(left, top, width, height) {
 Bat.prototype.move = function(duration) {
   this.top = this.top + this.velocityTop * duration;
 };
+
+Bat.prototype.type = "bat";
