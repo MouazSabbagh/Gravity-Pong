@@ -5,6 +5,7 @@ body {
   width: 100vw;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
@@ -12,4 +13,31 @@ body {
 
 .pong {
   border: 10px solid orange;
+}
+
+.score {
+  display: flex;
+
+  width: 40%;
+
+  justify-content: space-around;
+  align-items: center;
+}
+p {
+  font-family: sans-serif;
+  text-align: center;
+  min-width: 50px;
+  color: orange;
+  font-size: 50px;
+  padding: 20px;
+  border: 5px solid gray;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+.start {
+  padding: 10px 15px 10px 15px;
+  color: white;
+  font-size: 20px;
+  font-family: sans-serif;
+  background-color: orange;
 }

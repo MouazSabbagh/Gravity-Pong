@@ -22,7 +22,6 @@ export function drawBat(ctx, bat) {
   ctx.beginPath();
   ctx.fillStyle = bat.color;
   ctx.fillRect(bat.x, bat.y, bat.width, bat.height);
-
   ctx.closePath();
   ctx.restore();
 }
