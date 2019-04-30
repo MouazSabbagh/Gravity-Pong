@@ -9,12 +9,21 @@
 </head>
 
 <body>
+    <div class="winner-container">
+            <div class="winner"></div>
+    </div>
+    
 
     <template is = 'sparky' fn = 'pong' >
         <div class="score">
-                <p>{[bat1.score]}</p>
-                
+            <div class="player-one">
+                <div class="player1">Player One</div>
+                <p> {[bat1.score]}</p>
+            </div>
+            <div class="player-two">
+                <div class="player2">Player Two</div>
                 <p>{[bat2.score]}</p>
+            </div>
         </div>
 
         

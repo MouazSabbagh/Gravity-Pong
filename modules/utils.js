@@ -100,7 +100,7 @@ export function resolveCollision(particle, otherParticle) {
     particle.velocity.x = vFinal1.x;
     particle.velocity.y = vFinal1.y;
 
-    otherParticle.velocity.x = vFinal2.x;
+    // otherParticle.velocity.x = vFinal2.x;
     otherParticle.velocity.y = vFinal2.y;
   }
 }

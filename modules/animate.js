@@ -9,14 +9,33 @@ import {
 } from "./collision.js";
 import { functions, Stream, Observer } from "../sparky/module.js";
 import { randomNumInrange, resolveCollision } from "./utils.js";
-
-import { btn } from "./btn.js";
+import { winner, btn } from "./btn.js";
 
 const canvasNode = document.querySelector(".pong");
 const ctx = setupCanvas(canvasNode);
 functions.pong = function() {
   return Stream.of({ bat1, bat2 });
 };
+
+// onload
+window.onload = function() {
+  Observer(bat1).score = 0;
+  Observer(bat2).score = 0;
+  ball.velocity.x = 0;
+  ball.velocity.y = 0;
+};
+
+// start game function
+
+btn.addEventListener("click", startGame);
+
+export function startGame() {
+  Observer(bat1).score = 0;
+  Observer(bat2).score = 0;
+  winner.textContent = "";
+  ball.velocity.x = (Math.random() - 0.5) * 20;
+  ball.velocity.y = (Math.random() - 0.5) * 20;
+}
 
 // create the models
 
@@ -33,11 +52,11 @@ const bat2 = new Bat(
   50,
   50,
   "gray",
-  20
+  10
 );
-console.log(bat1, bat2);
 
 // set up the controllers which mean what the users are doing
+// click startGameBtn
 
 // player one
 listenToKeyEvents(
@@ -119,43 +138,44 @@ function updateBatVelocityFromEdges(bat, height) {
     bat.y = 0 - bat.velocity.y;
   }
 }
+function theWinner() {
+  if (bat1.score === 2) {
+    ball.velocity.x = 0;
+    ball.velocity.y = 0;
+    winner.textContent = `The Winner Is:
+    Player One!!`;
+  }
+  if (bat2.score === 2) {
+    ball.velocity.x = 0;
+    ball.velocity.y = 0;
+    winner.textContent = `The Winner Is:
+    Player two!!`;
+  }
+}
 
 function updateBallVelocityFromBats(ball, bat1, bat2) {
   let collision = detectBatCollision(ball, bat1);
 
   if (collision === "x") {
-    bat1.x = bat1.x + bat1.width / 2;
-    bat1.y = bat1.x + bat1.width / 2;
-    resolveCollision(bat1, ball);
-    // ball.velocity.x = -ball.velocity.x;
+    ball.velocity.x = -ball.velocity.x;
 
     return;
   }
 
   if (collision === "y") {
-    bat1.x = bat1.x + bat1.width / 2;
-    bat1.y = bat1.y + bat1.width / 2;
-    resolveCollision(bat1, ball);
-    // ball.velocity.y = -ball.velocity.y;
+    ball.velocity.y = -ball.velocity.y;
     return;
   }
 
   collision = detectBatCollision(ball, bat2);
 
   if (collision === "x") {
-    bat2.x = bat2.x + bat2.width / 2;
-    bat2.y = bat2.y + bat2.width / 2;
-    resolveCollision(bat2, ball);
-    // ball.velocity.x = -ball.velocity.x;
-
+    ball.velocity.x = -ball.velocity.x;
     return;
   }
 
   if (collision === "y") {
-    bat2.x = bat2.x + bat2.width / 2;
-    bat2.y = bat2.y + bat2.width / 2;
-    resolveCollision(bat2, ball);
-    // ball.velocity.y = -ball.velocity.y;
+    ball.velocity.y = -ball.velocity.y;
 
     return;
   }
@@ -176,6 +196,7 @@ function update() {
   ball.move();
   bat1.move();
   bat2.move();
+  theWinner();
 
   // draw the views
   clearCanvas(ctx, canvasNode.width, canvasNode.height);

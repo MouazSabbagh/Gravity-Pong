@@ -14,6 +14,9 @@ body {
 .pong {
   border: 10px solid orange;
 }
+.winner {
+  margin-bottom: 40px;
+}
 
 .score {
   display: flex;
@@ -22,6 +25,18 @@ body {
 
   justify-content: space-around;
   align-items: center;
+}
+.player-one,
+.player-two {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.player1,
+.player2 {
+  margin-bottom: -45px;
 }
 p {
   font-family: sans-serif;
@@ -40,4 +55,5 @@ p {
   font-size: 20px;
   font-family: sans-serif;
   background-color: orange;
+  margin-bottom: 20px;
 }
