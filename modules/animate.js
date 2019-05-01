@@ -33,8 +33,8 @@ export function startGame() {
   Observer(bat1).score = 0;
   Observer(bat2).score = 0;
   winner.textContent = "";
-  ball.velocity.x = (Math.random() - 0.5) * 20;
-  ball.velocity.y = (Math.random() - 0.5) * 20;
+  ball.velocity.x = 3;
+  ball.velocity.y = 0;
 }
 
 // create the models
@@ -45,15 +45,8 @@ const ball = new Ball(
   10,
   "red"
 );
-const bat1 = new Bat(50, 50, 50, 50, "gray", 7);
-const bat2 = new Bat(
-  canvasNode.width - bat1.width - 50,
-  50,
-  50,
-  50,
-  "gray",
-  10
-);
+const bat1 = new Bat(50, 50, 50, 50, "gray", 0);
+const bat2 = new Bat(canvasNode.width - bat1.width - 50, 50, 50, 50, "gray", 0);
 
 // set up the controllers which mean what the users are doing
 // click startGameBtn
@@ -109,7 +102,7 @@ function updateBallVelocityFromEdges(ball, width, height) {
     ball.velocity.x = 0;
     ball.velocity.y = 0;
     setTimeout(() => {
-      ball.velocity.x = (Math.random() - 0.5) * 20;
+      ball.velocity.x = 3;
     }, 2000);
   }
   if (collision === "xLeft") {
@@ -120,7 +113,7 @@ function updateBallVelocityFromEdges(ball, width, height) {
     ball.velocity.x = 0;
     ball.velocity.y = 0;
     setTimeout(() => {
-      ball.velocity.x = (Math.random() - 0.5) * 20;
+      ball.velocity.x = 3;
     }, 2000);
   }
 
@@ -139,13 +132,13 @@ function updateBatVelocityFromEdges(bat, height) {
   }
 }
 function theWinner() {
-  if (bat1.score === 2) {
+  if (bat1.score === 5) {
     ball.velocity.x = 0;
     ball.velocity.y = 0;
     winner.textContent = `The Winner Is:
     Player One!!`;
   }
-  if (bat2.score === 2) {
+  if (bat2.score === 5) {
     ball.velocity.x = 0;
     ball.velocity.y = 0;
     winner.textContent = `The Winner Is:
@@ -154,37 +147,28 @@ function theWinner() {
 }
 
 function updateBallVelocityFromBats(ball, bat1, bat2) {
-  bat1.x = bat1.x + bat1.width / 2;
-  bat1.y = bat1.y + bat1.width / 2;
-  bat2.x = bat2.x + bat2.width / 2;
-  bat2.y = bat2.y + bat2.width / 2;
-
   let collision = detectBatCollision(ball, bat1);
 
   if (collision === "x") {
-    console.log(bat1, bat2);
-    // ball.velocity.x = -ball.velocity.x;
+    ball.velocity.x = -ball.velocity.x;
 
     return;
   }
 
   if (collision === "y") {
-    console.log(bat1, bat2);
-    // ball.velocity.y = -ball.velocity.y;
+    ball.velocity.y = -ball.velocity.y;
     return;
   }
 
   collision = detectBatCollision(ball, bat2);
 
   if (collision === "x") {
-    console.log(bat1, bat2);
-    // ball.velocity.x = -ball.velocity.x;
+    ball.velocity.x = -ball.velocity.x;
     return;
   }
 
   if (collision === "y") {
-    console.log(bat1, bat2);
-    // ball.velocity.y = -ball.velocity.y;
+    ball.velocity.y = -ball.velocity.y;
 
     return;
   }

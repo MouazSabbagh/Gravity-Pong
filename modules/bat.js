@@ -1,10 +1,11 @@
 export class Bat {
   constructor(x, y, width, height, color, score) {
     this.color = color || "orange";
-    this.x = x;
-    this.y = y;
+
     this.width = width;
     this.height = height;
+    this.x = x;
+    this.y = y;
     this.velocity = {
       x: 0,
       y: 0

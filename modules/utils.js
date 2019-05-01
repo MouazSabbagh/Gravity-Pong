@@ -97,10 +97,10 @@ export function resolveCollision(particle, otherParticle) {
     const vFinal2 = rotate(v2, -angle);
 
     // Swap particle velocities for realistic bounce effect
-    particle.velocity.x = vFinal1.x;
-    particle.velocity.y = vFinal1.y;
+    // particle.velocity.x = vFinal1.x;
+    // particle.velocity.y = vFinal1.y;
 
-    // otherParticle.velocity.x = vFinal2.x;
+    otherParticle.velocity.x = vFinal2.x;
     otherParticle.velocity.y = vFinal2.y;
   }
 }
