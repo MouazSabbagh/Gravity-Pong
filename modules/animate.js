@@ -154,28 +154,37 @@ function theWinner() {
 }
 
 function updateBallVelocityFromBats(ball, bat1, bat2) {
+  bat1.x = bat1.x + bat1.width / 2;
+  bat1.y = bat1.y + bat1.width / 2;
+  bat2.x = bat2.x + bat2.width / 2;
+  bat2.y = bat2.y + bat2.width / 2;
+
   let collision = detectBatCollision(ball, bat1);
 
   if (collision === "x") {
-    ball.velocity.x = -ball.velocity.x;
+    console.log(bat1, bat2);
+    // ball.velocity.x = -ball.velocity.x;
 
     return;
   }
 
   if (collision === "y") {
-    ball.velocity.y = -ball.velocity.y;
+    console.log(bat1, bat2);
+    // ball.velocity.y = -ball.velocity.y;
     return;
   }
 
   collision = detectBatCollision(ball, bat2);
 
   if (collision === "x") {
-    ball.velocity.x = -ball.velocity.x;
+    console.log(bat1, bat2);
+    // ball.velocity.x = -ball.velocity.x;
     return;
   }
 
   if (collision === "y") {
-    ball.velocity.y = -ball.velocity.y;
+    console.log(bat1, bat2);
+    // ball.velocity.y = -ball.velocity.y;
 
     return;
   }
