@@ -6,7 +6,7 @@ export class Ball {
     this.r = r;
     this.velocity = {
       x: (Math.random() - 0.5) * 20, // range between -0.5 and 0.5
-      y: 0
+      y: (Math.random() - 0.5) * 20
     };
     this.friction = 0.2;
     this.mass = 400;

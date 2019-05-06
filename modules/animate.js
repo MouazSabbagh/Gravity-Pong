@@ -12,6 +12,7 @@ import { randomNumInrange, resolveCollision } from "./utils.js";
 import { winner, btn } from "./btn.js";
 
 const canvasNode = document.querySelector(".pong");
+const canvasNodeWidth = 1000;
 const ctx = setupCanvas(canvasNode);
 functions.pong = function() {
   return Stream.of({ bat1, bat2 });
@@ -34,7 +35,7 @@ export function startGame() {
   Observer(bat2).score = 0;
   winner.textContent = "";
   ball.velocity.x = 3;
-  ball.velocity.y = 0;
+  ball.velocity.y = (Math.random() - 0.5) * 5;
 }
 
 // create the models
@@ -110,6 +111,7 @@ function updateBallVelocityFromEdges(ball, width, height) {
     ball.velocity.y = 0;
     setTimeout(() => {
       ball.velocity.x = 3;
+      ball.velocity.y = (Math.random() - 0.5) * 5;
     }, 2000);
   }
   if (collision === "xLeft") {
@@ -121,6 +123,7 @@ function updateBallVelocityFromEdges(ball, width, height) {
     ball.velocity.y = 0;
     setTimeout(() => {
       ball.velocity.x = 3;
+      ball.velocity.y = (Math.random() - 0.5) * 5;
     }, 2000);
   }
 

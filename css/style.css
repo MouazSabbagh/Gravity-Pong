@@ -13,6 +13,8 @@ body {
 
 .pong {
   border: 10px solid orange;
+  width: 1000px;
+  height: auto;
 }
 .winner {
   margin-bottom: 40px;
@@ -57,9 +59,16 @@ body {
   background-color: orange;
   margin-bottom: 20px;
 }
+button:focus {
+  outline: 0;
+}
 
 .instructions {
   font-size: 12px;
   font-family: sans-serif;
   color: black;
+}
+kbd {
+  font-size: 16px;
+  color: orange;
 }
