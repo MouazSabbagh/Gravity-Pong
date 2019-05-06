@@ -166,8 +166,13 @@ function updateBallVelocityFromBats(ball, bat1, bat2) {
 
   if (collision === "y") {
     // ball.velocity.y = -ball.velocity.y;
-    ball.velocity.x = ball.velocity.x;
-    ball.velocity.y = ball.velocity.y + ball.friction * bat2.velocity.y;
+    if (bat1.velocity === 0) {
+      ball.velocity.y = -ball.friction * (ball.velocity.y / 2);
+    }
+    if (bat1.velocity !== 0) {
+      ball.velocity.x = ball.velocity.x;
+      ball.velocity.y = ball.friction * (ball.velocity.y + bat1.velocity.y);
+    }
 
     return;
   }
@@ -183,8 +188,14 @@ function updateBallVelocityFromBats(ball, bat1, bat2) {
 
   if (collision === "y") {
     // ball.velocity.y = -ball.velocity.y;
-    ball.velocity.x = ball.velocity.x;
-    ball.velocity.y = ball.velocity.y + ball.friction * bat2.velocity.y;
+    if (bat2.velocity === 0) {
+      ball.velocity.y =
+        -ball.friction * ball.velocity.y - (1 / 2) * ball.velocity.y;
+    }
+    if (bat2.velocity !== 0) {
+      // ball.velocity.x = ball.velocity.x;
+      ball.velocity.y = ball.friction * (ball.velocity.y + bat2.velocity.y);
+    }
 
     return;
   }
