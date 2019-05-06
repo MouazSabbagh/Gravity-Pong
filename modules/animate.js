@@ -45,8 +45,15 @@ const ball = new Ball(
   10,
   "red"
 );
-const bat1 = new Bat(50, 50, 50, 50, "gray", 0);
-const bat2 = new Bat(canvasNode.width - bat1.width - 50, 50, 50, 50, "gray", 0);
+const bat1 = new Bat(50, canvasNode.height / 2 - 25, 50, 50, "gray", 0);
+const bat2 = new Bat(
+  canvasNode.width - bat1.width - 50,
+  canvasNode.height / 2 - 25,
+  50,
+  50,
+  "gray",
+  0
+);
 
 // set up the controllers which mean what the users are doing
 // click startGameBtn
@@ -55,7 +62,7 @@ const bat2 = new Bat(canvasNode.width - bat1.width - 50, 50, 50, 50, "gray", 0);
 listenToKeyEvents(
   "w",
   () => {
-    bat1.velocity.y = -2;
+    bat1.velocity.y = -4;
   },
 
   () => {
@@ -65,14 +72,14 @@ listenToKeyEvents(
 
 listenToKeyEvents(
   "s",
-  () => (bat1.velocity.y = 2),
+  () => (bat1.velocity.y = 4),
   () => (bat1.velocity.y = 0)
 );
 // player two
 listenToKeyEvents(
   "up",
   () => {
-    bat2.velocity.y = -2;
+    bat2.velocity.y = -4;
   },
   () => {
     bat2.velocity.y = 0;
@@ -80,7 +87,7 @@ listenToKeyEvents(
 );
 listenToKeyEvents(
   "down",
-  () => (bat2.velocity.y = 2),
+  () => (bat2.velocity.y = 4),
   () => (bat2.velocity.y = 0)
 );
 
@@ -151,12 +158,17 @@ function updateBallVelocityFromBats(ball, bat1, bat2) {
 
   if (collision === "x") {
     ball.velocity.x = -ball.velocity.x;
+    ball.velocity.y =
+      ball.velocity.y + ball.friction * (bat1.velocity.y + ball.velocity.y);
 
     return;
   }
 
   if (collision === "y") {
-    ball.velocity.y = -ball.velocity.y;
+    // ball.velocity.y = -ball.velocity.y;
+    ball.velocity.x = ball.velocity.x;
+    ball.velocity.y = ball.velocity.y + ball.friction * bat2.velocity.y;
+
     return;
   }
 
@@ -164,11 +176,15 @@ function updateBallVelocityFromBats(ball, bat1, bat2) {
 
   if (collision === "x") {
     ball.velocity.x = -ball.velocity.x;
+    ball.velocity.y =
+      ball.velocity.y + ball.friction * (bat2.velocity.y + ball.velocity.y);
     return;
   }
 
   if (collision === "y") {
-    ball.velocity.y = -ball.velocity.y;
+    // ball.velocity.y = -ball.velocity.y;
+    ball.velocity.x = ball.velocity.x;
+    ball.velocity.y = ball.velocity.y + ball.friction * bat2.velocity.y;
 
     return;
   }

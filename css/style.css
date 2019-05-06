@@ -38,7 +38,7 @@ body {
 .player2 {
   margin-bottom: -45px;
 }
-p {
+.player {
   font-family: sans-serif;
   text-align: center;
   min-width: 50px;
@@ -56,4 +56,10 @@ p {
   font-family: sans-serif;
   background-color: orange;
   margin-bottom: 20px;
+}
+
+.instructions {
+  font-size: 12px;
+  font-family: sans-serif;
+  color: black;
 }
