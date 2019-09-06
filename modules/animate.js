@@ -2,12 +2,8 @@ import { Ball } from "./ball.js";
 import { Bat } from "./bat.js";
 import { setupCanvas, drawBall, drawBat, clearCanvas } from "./canvas.js";
 import { listenToKeyEvents } from "./keyboardEvents.js";
-import {
-  detectEdgeCollision,
-  detectBatCollision,
-  detectBatEdgeCollision
-} from "./collision.js";
-import { functions, Stream, Observer } from "../sparky/module.js";
+import { detectEdgeCollision, detectBatCollision, detectBatEdgeCollision } from "./collision.js";
+import { functions, Stream, Observer } from "../../sparky/module.js";
 import { randomNumInrange, resolveCollision } from "./utils.js";
 import { winner, btn } from "./btn.js";
 

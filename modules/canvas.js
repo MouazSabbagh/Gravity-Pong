@@ -16,6 +16,7 @@ export function drawBall(ctx, ball) {
   ctx.closePath();
   ctx.restore();
 }
+
 // this function is responsile for drawing the bat
 export function drawBat(ctx, bat) {
   ctx.save();

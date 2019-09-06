@@ -22,6 +22,7 @@ export function randomNumInrange(min, max) {
 function dist(diff) {
   return Math.sqrt(Math.pow(diff.x, 2) + Math.pow(diff.y, 2));
 }
+
 function distance(x1, y1, x2, y2) {
   const xdis = x2 - x1;
   const ydis = y2 - y1;
