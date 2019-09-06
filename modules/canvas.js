@@ -1,7 +1,7 @@
 export function setupCanvas(canvasNode) {
   const ctx = canvasNode.getContext("2d");
-  canvasNode.width = window.innerWidth / 2;
-  canvasNode.height = window.innerHeight / 2;
+  //canvasNode.width = window.innerWidth / 2;
+  //canvasNode.height = window.innerHeight / 2;
   return ctx;
 }
 

@@ -30,7 +30,7 @@ export function startGame() {
   Observer(bat1).score = 0;
   Observer(bat2).score = 0;
   winner.textContent = "";
-  ball.velocity.x = 3;
+  ball.velocity.x = 5;
   ball.velocity.y = (Math.random() - 0.5) * 5;
 }
 
@@ -39,16 +39,16 @@ export function startGame() {
 const ball = new Ball(
   canvasNode.width / 2,
   randomNumInrange(50, canvasNode.height - 50),
-  10,
-  "red"
+  15,
+  "#b0aead"
 );
-const bat1 = new Bat(50, canvasNode.height / 2 - 25, 50, 50, "gray", 0);
+const bat1 = new Bat(0, canvasNode.height / 2 - 45, 30, 90, "#b0aead", 0);
 const bat2 = new Bat(
-  canvasNode.width - bat1.width - 50,
-  canvasNode.height / 2 - 25,
-  50,
-  50,
-  "gray",
+  canvasNode.width - bat1.width,
+  canvasNode.height / 2 - 45,
+  30,
+  90,
+  "#b0aead",
   0
 );
 

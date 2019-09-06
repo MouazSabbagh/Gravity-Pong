@@ -1,4 +1,4 @@
-import { toKeyCode } from "../dom/module.js";
+import { toKeyCode } from "../../dom/module.js";
 
 window.addEventListener("keydown", keyDownFn);
 const currentKeys = {};
