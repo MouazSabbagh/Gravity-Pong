@@ -1,15 +1,22 @@
 import { Ball } from "./ball.js";
 import { Bat } from "./bat.js";
 import { setupCanvas, drawBall, drawBat, clearCanvas } from "./canvas.js";
-import { listenToKeyEvents } from "./keyboardEvents.js";
+import { listenToKey } from "./keyboard.js";
 import { detectEdgeCollision, detectBatCollision, detectBatEdgeCollision } from "./collision.js";
 import { functions, Stream, Observer } from "../../sparky/module.js";
 import { randomNumInrange, resolveCollision } from "./utils.js";
-import { winner, btn } from "./btn.js";
 
 const canvasNode = document.querySelector(".pong");
 const canvasNodeWidth = 1000;
+const padding = 42;
+const startVelocityX = 6;
+const startVelocityY = 20;
+const batVelocity = 5;
+const unlisteners = [];
 const ctx = setupCanvas(canvasNode);
+
+let frameId = -1;
+
 functions.pong = function() {
   return Stream.of({ bat1, bat2 });
 };
@@ -24,109 +31,113 @@ window.onload = function() {
 
 // start game function
 
-btn.addEventListener("click", startGame);
+function call(fn) {
+  fn();
+}
 
-export function startGame() {
+function startGame() {
+  unlisteners.forEach(call);
+  unlisteners.length = 0;
+
   Observer(bat1).score = 0;
   Observer(bat2).score = 0;
-  winner.textContent = "";
-  ball.velocity.x = 5;
-  ball.velocity.y = (Math.random() - 0.5) * 5;
+
+  playGame((Math.random() - 0.5) > 0 ? startVelocityX : -startVelocityX, (Math.random() - 0.5) * startVelocityY);
 }
+
+function playGame(vx, vy) {
+  unlisteners.forEach(call);
+  unlisteners.length = 0;
+
+  ball.x = canvasNode.width / 2;
+  ball.y = canvasNode.height / 2;
+  ball.color = '#ee2200';
+
+  frameId = window.requestAnimationFrame(update);
+
+  setTimeout(function() {
+    ball.color = '#FE681F';
+
+    setTimeout(function() {
+      ball.color = '#B8C53F';
+
+      setTimeout(function() {
+        ball.velocity.x = vx;
+        ball.velocity.y = vy;
+      }, 600);
+    }, 600);
+  }, 600);
+}
+
 
 // create the models
 
-const ball = new Ball(
-  canvasNode.width / 2,
-  randomNumInrange(50, canvasNode.height - 50),
-  15,
-  "#b0aead"
-);
-const bat1 = new Bat(0, canvasNode.height / 2 - 45, 30, 90, "#b0aead", 0);
-const bat2 = new Bat(
-  canvasNode.width - bat1.width,
-  canvasNode.height / 2 - 45,
-  30,
-  90,
-  "#b0aead",
-  0
-);
+const ball = new Ball(canvasNode.width / 2, randomNumInrange(50, canvasNode.height - 50), 18, "#6e7477");
+const bat1 = new Bat(padding, canvasNode.height / 2 - 45, 30, 90, "#b0aead", 0);
+const bat2 = new Bat(canvasNode.width - bat1.width - padding, canvasNode.height / 2 - 45, 30, 90, "#b0aead", 0);
 
 // set up the controllers which mean what the users are doing
 // click startGameBtn
 
-// player one
-listenToKeyEvents(
-  "w",
-  () => {
-    bat1.velocity.y = -4;
-  },
-
-  () => {
-    bat1.velocity.y = 0;
-  }
-);
-
-listenToKeyEvents(
-  "s",
-  () => (bat1.velocity.y = 4),
-  () => (bat1.velocity.y = 0)
-);
 // player two
-listenToKeyEvents(
+listenToKey(
   "up",
-  () => {
-    bat2.velocity.y = -4;
-  },
-  () => {
-    bat2.velocity.y = 0;
-  }
+  () => bat2.velocity.y = -batVelocity,
+  () => bat2.velocity.y = 0
 );
-listenToKeyEvents(
+
+listenToKey(
   "down",
-  () => (bat2.velocity.y = 4),
-  () => (bat2.velocity.y = 0)
+  () => bat2.velocity.y = batVelocity,
+  () => bat2.velocity.y = 0
 );
+
+unlisteners.push(listenToKey("up", startGame));
+unlisteners.push(listenToKey("down", startGame));
+
 
 // the update section
 
+function reset(ball, velocityX) {
+    window.cancelAnimationFrame(frameId);
+
+    ball.velocity.x = 0;
+    ball.velocity.y = 0;
+    ball.x = canvasNode.width / 2;
+    ball.y = canvasNode.height / 2;
+    ball.color = "#6e7477";
+
+    const velocityY = (Math.random() - 0.5) * startVelocityY;
+
+    unlisteners.push(listenToKey("up", () => playGame(velocityX, velocityY)));
+    unlisteners.push(listenToKey("down", () => playGame(velocityX, velocityY)));
+}
+
+function updateScore(ball, bat1, bat2, width) {
+    if (ball.x - ball.r > width) {
+        // PLayer 1 scores
+        Observer(bat1).score++;
+        reset(ball, startVelocityX);
+    }
+    else if (ball.x + ball.r < 0) {
+        // Player 2 scores
+        Observer(bat2).score++;
+        reset(ball, -startVelocityX);
+    }
+}
+
 function updateBallVelocityFromEdges(ball, width, height) {
-  let count1 = 0;
-  let count2 = 0;
-  let currentScore1 = bat1.score;
-  let currentScore2 = bat2.score;
   const collision = detectEdgeCollision(ball, width, height);
-  if (!collision) return;
-  // one of the player get a point reset the position of the ball, update the score
-  if (collision === "xRight") {
-    count1 = count1 + 1;
-    Observer(bat1).score = count1 + currentScore1;
-    ball.x = canvasNode.width / 2;
-    ball.y = randomNumInrange(50, canvasNode.height - 50);
-    ball.velocity.x = 0;
-    ball.velocity.y = 0;
-    setTimeout(() => {
-      ball.velocity.x = 3;
-      ball.velocity.y = (Math.random() - 0.5) * 5;
-    }, 2000);
-  }
-  if (collision === "xLeft") {
-    count2 = count2 + 1;
-    Observer(bat2).score = count2 + currentScore2;
-    ball.x = canvasNode.width / 2;
-    ball.y = randomNumInrange(50, canvasNode.height - 50);
-    ball.velocity.x = 0;
-    ball.velocity.y = 0;
-    setTimeout(() => {
-      ball.velocity.x = 3;
-      ball.velocity.y = (Math.random() - 0.5) * 5;
-    }, 2000);
-  }
 
   if (collision === "y") {
     ball.velocity.y = -ball.velocity.y;
   }
 }
+
+function updateBat1Velocity() {
+
+}
+
 function updateBatVelocityFromEdges(bat, height) {
   const collision = detectBatEdgeCollision(bat, height);
   if (!collision) return;
@@ -135,20 +146,6 @@ function updateBatVelocityFromEdges(bat, height) {
   }
   if (collision === "yTop") {
     bat.y = 0 - bat.velocity.y;
-  }
-}
-function theWinner() {
-  if (bat1.score === 5) {
-    ball.velocity.x = 0;
-    ball.velocity.y = 0;
-    winner.textContent = `The Winner Is:
-    Player One!!`;
-  }
-  if (bat2.score === 5) {
-    ball.velocity.x = 0;
-    ball.velocity.y = 0;
-    winner.textContent = `The Winner Is:
-    Player two!!`;
   }
 }
 
@@ -200,9 +197,20 @@ function updateBallVelocityFromBats(ball, bat1, bat2) {
   }
 }
 
+function render() {
+  clearCanvas(ctx, canvasNode.width, canvasNode.height);
+  drawBall(ctx, ball);
+  drawBat(ctx, bat1);
+  drawBat(ctx, bat2);
+}
+
 function update() {
+  frameId = window.requestAnimationFrame(update);
+
   //  function edge detection collision
   updateBallVelocityFromEdges(ball, canvasNode.width, canvasNode.height);
+
+  updateBat1Velocity(ball, bat1);
 
   // function edge bat detection
   updateBatVelocityFromEdges(bat1, canvasNode.height);
@@ -215,20 +223,14 @@ function update() {
   ball.move();
   bat1.move();
   bat2.move();
-  theWinner();
+
+  // Detect if player has scored a point
+  updateScore(ball, bat1, bat2, canvasNode.width);
 
   // draw the views
-  clearCanvas(ctx, canvasNode.width, canvasNode.height);
-  drawBall(ctx, ball);
-  drawBat(ctx, bat1);
-  drawBat(ctx, bat2);
+  render();
 }
 
-// animation loop
-
-function animate() {
-  window.requestAnimationFrame(animate);
-
-  update();
-}
-animate();
+// Initial view
+reset(ball, (Math.random() - 0.5) > 0 ? startVelocityX : -startVelocityX);
+render();

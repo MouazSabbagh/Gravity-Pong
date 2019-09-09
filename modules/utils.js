@@ -115,4 +115,3 @@ function toCenter(x, y, width, height) {
   obj.yCenter = y + height / 2;
   return obj;
 }
-console.log(toCenter(5, 5, 10, 10));
