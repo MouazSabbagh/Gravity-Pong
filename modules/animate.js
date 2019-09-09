@@ -9,7 +9,7 @@ import { randomNumInrange, resolveCollision } from "./utils.js";
 const canvasNode = document.querySelector(".pong");
 const canvasNodeWidth = 1000;
 const padding = 42;
-const startVelocityX = 6;
+const startVelocityX = 7;
 const startVelocityY = 12;
 const batVelocity = 5;
 const unlisteners = [];
