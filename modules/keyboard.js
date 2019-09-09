@@ -18,13 +18,19 @@ function remove(array, item) {
 }
 
 function keyDownFn(e) {
-  if (currentKeys[e.keyCode]) return;
+  if (currentKeys[e.keyCode]) {
+    // Stop default behaviours on bound keys
+    e.preventDefault();
+    return;
+  }
 
-  currentKeys[e.keyCode] = true;
   const fns = keydowns[e.keyCode];
 
   if (!fns) { return; }
   fns.forEach(call);
+
+  // Flag key as pressed
+  currentKeys[e.keyCode] = true;
 
   // Stop default behaviours on bound keys
   e.preventDefault();
