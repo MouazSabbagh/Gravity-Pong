@@ -10,7 +10,7 @@ const canvasNode = document.querySelector(".pong");
 const canvasNodeWidth = 1000;
 const padding = 42;
 const startVelocityX = 6;
-const startVelocityY = 20;
+const startVelocityY = 12;
 const batVelocity = 5;
 const unlisteners = [];
 const ctx = setupCanvas(canvasNode);
@@ -134,8 +134,9 @@ function updateBallVelocityFromEdges(ball, width, height) {
   }
 }
 
-function updateBat1Velocity() {
-
+function updateBat1Velocity(ball, bat1) {
+    if (Math.abs(ball.y - (bat1.y + bat1.height / 2)) < 20) { return; }
+    bat1.velocity.y = ball.y > bat1.y + bat1.height / 2 ? batVelocity : -batVelocity ;
 }
 
 function updateBatVelocityFromEdges(bat, height) {
