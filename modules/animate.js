@@ -135,7 +135,11 @@ function updateBallVelocityFromEdges(ball, width, height) {
 }
 
 function updateBat1Velocity(ball, bat1) {
-    if (Math.abs(ball.y - (bat1.y + bat1.height / 2)) < 20) { return; }
+    if (Math.abs(ball.y - (bat1.y + bat1.height / 2)) < 20) {
+        bat1.velocity.y = bat1.velocity.y * 0.875;
+        return;
+    }
+
     bat1.velocity.y = ball.y > bat1.y + bat1.height / 2 ? batVelocity : -batVelocity ;
 }
 

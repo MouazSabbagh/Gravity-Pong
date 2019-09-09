@@ -25,6 +25,9 @@ function keyDownFn(e) {
 
   if (!fns) { return; }
   fns.forEach(call);
+
+  // Stop default behaviours on bound keys
+  e.preventDefault();
 }
 
 function keyUpFn(e) {
