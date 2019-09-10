@@ -1,6 +1,6 @@
 
 // Actor()
-// Base constructor for all moveable, animateable, collideable objects
+// Base constructor for moveable, animateable, collideable objects
 // in a scene.
 
 export default function Actor() {
