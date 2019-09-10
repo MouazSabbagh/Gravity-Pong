@@ -3,7 +3,7 @@
 // Base constructor for all moveable, animateable, collideable objects
 // in a scene.
 
-function Actor() {
+export default function Actor() {
     this.mass     = 0;
     this.position = { x: 0, y: 0 };
     this.velocity = { x: 0, y: 0 };
@@ -21,5 +21,12 @@ Object.assign(Actor.prototype, {
         this.position.y = this.position.y + this.velocity.y * duration;
         this.time = time;
         return this;
+    },
+
+    // Legacy to support original non-time-dependent animation update
+    // move() method
+    move: function() {
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
     }
 });

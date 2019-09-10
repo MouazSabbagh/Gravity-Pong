@@ -10,7 +10,7 @@ export function setupCanvas(canvasNode) {
 export function drawBall(ctx, ball) {
   ctx.save();
   ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2, false);
+  ctx.arc(ball.position.x, ball.position.y, ball.radius, 0, Math.PI * 2, false);
   ctx.fillStyle = ball.color;
   ctx.fill();
   ctx.closePath();

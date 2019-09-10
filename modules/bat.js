@@ -10,7 +10,7 @@ export class Bat {
       x: 0,
       y: 0
     };
-    this.score = score || 0;
+    this.score = 0;
     this.mass = 30;
   }
 
