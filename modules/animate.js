@@ -4,9 +4,9 @@ import { setupCanvas, drawBall, drawBat, clearCanvas } from "./canvas.js";
 import { listenToKey } from "./keyboard.js";
 import { detectEdgeCollision, detectBatCollision, detectBatEdgeCollision } from "./collision.js";
 import { randomNumInrange, resolveCollision } from "./utils.js";
+import { playCollision } from "./sound.js";
 
 const canvasNode = document.querySelector(".pong");
-const canvasNodeWidth = 1000;
 const padding = 42;
 const startVelocityX = 8;
 const startVelocityY = 12;
@@ -122,6 +122,24 @@ function updateBallVelocityFromEdges(ball, width, height) {
 
   if (collision === "y") {
     ball.velocity.y = -ball.velocity.y;
+
+    // Return collisions object
+    return {
+        time: 0,
+        position: {
+            x: ball.position.x,
+            y: ball.position.y
+        },
+
+        impulse: {
+            x: ball.velocity.x,
+            y: ball.velocity.y
+        },
+
+        object1: ball,
+        object2: canvasNode,
+        viewport: canvasNode
+    }
   }
 }
 
@@ -150,10 +168,26 @@ function updateBallVelocityFromBats(ball, bat1, bat2) {
 
   if (collision === "x") {
     ball.velocity.x = -ball.velocity.x;
-    ball.velocity.y =
-      ball.velocity.y + ball.friction * (bat1.velocity.y + ball.velocity.y);
+    ball.velocity.y = ball.velocity.y + ball.friction * (bat1.velocity.y + ball.velocity.y);
 
-    return;
+    // Return collisions object
+    return {
+        time: 0,
+
+        position: {
+            x: ball.position.x,
+            y: ball.position.y
+        },
+
+        impulse: {
+            x: ball.velocity.x,
+            y: ball.velocity.y
+        },
+
+        object1: ball,
+        object2: bat1,
+        viewport: canvasNode
+    };
   }
 
   if (collision === "y") {
@@ -166,16 +200,48 @@ function updateBallVelocityFromBats(ball, bat1, bat2) {
       ball.velocity.y = ball.friction * (ball.velocity.y + bat1.velocity.y);
     }
 
-    return;
+    // Return collisions object
+    return {
+        time: 0,
+        position: {
+            x: ball.position.x,
+            y: ball.position.y
+        },
+
+        impulse: {
+            x: ball.velocity.x,
+            y: ball.velocity.y
+        },
+
+        object1: ball,
+        object2: bat1,
+        viewport: canvasNode
+    };
   }
 
   collision = detectBatCollision(ball, bat2);
 
   if (collision === "x") {
     ball.velocity.x = -ball.velocity.x;
-    ball.velocity.y =
-      ball.velocity.y + ball.friction * (bat2.velocity.y + ball.velocity.y);
-    return;
+    ball.velocity.y = ball.velocity.y + ball.friction * (bat2.velocity.y + ball.velocity.y);
+
+    // Return collisions object
+    return {
+        time: 0,
+        position: {
+            x: ball.position.x,
+            y: ball.position.y
+        },
+
+        impulse: {
+            x: ball.velocity.x,
+            y: ball.velocity.y
+        },
+
+        object1: ball,
+        object2: bat2,
+        viewport: canvasNode
+    };
   }
 
   if (collision === "y") {
@@ -189,7 +255,23 @@ function updateBallVelocityFromBats(ball, bat1, bat2) {
       ball.velocity.y = ball.friction * (ball.velocity.y + bat2.velocity.y);
     }
 
-    return;
+    // Return collisions object
+    return {
+        time: 0,
+        position: {
+            x: ball.position.x,
+            y: ball.position.y
+        },
+
+        impulse: {
+            x: ball.velocity.x,
+            y: ball.velocity.y
+        },
+
+        object1: ball,
+        object2: bat2,
+        viewport: canvasNode
+    };
   }
 }
 
@@ -205,11 +287,20 @@ function renderScore(player1, player2) {
     score2Node.innerHTML = player2.score;
 }
 
-function update() {
+var collisions = [];
+
+function update(time) {
   frameId = window.requestAnimationFrame(update);
+  collisions.length = 0;
 
   //  function edge detection collision
-  updateBallVelocityFromEdges(ball, canvasNode.width, canvasNode.height);
+  var collision = updateBallVelocityFromEdges(ball, canvasNode.width, canvasNode.height);
+
+  if (collision) {
+      collision.time = time;
+      collisions.push(collision);
+  }
+
   updateBat1Velocity(ball, bat1);
 
   // function edge bat detection
@@ -217,7 +308,12 @@ function update() {
   updateBatVelocityFromEdges(bat2, canvasNode.height);
 
   // function balls & bats detection
-  updateBallVelocityFromBats(ball, bat1, bat2);
+  collision = updateBallVelocityFromBats(ball, bat1, bat2);
+
+  if (collision) {
+      collision.time = time;
+      collisions.push(collision);
+  }
 
   // update models
   ball.move();
@@ -229,6 +325,9 @@ function update() {
 
   // draw the views
   render();
+
+  // Schedule the sounds
+  collisions.forEach(playCollision);
 }
 
 // Initial view
