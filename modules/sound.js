@@ -117,7 +117,7 @@ const collisionSynthData = {
             'filter-envelope': {
                 gain: {
                     1: { type: 'scale', scale: 0.6 },
-                    2: { type: 'logarithmic', min: 200, max: 4000 }
+                    2: { type: 'logarithmic', min: 240, max: 4000 }
                 }
             },
 
