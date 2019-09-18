@@ -85,7 +85,7 @@ const collisionSynthData = {
             data: {
                 type: 'lowpass',
                 frequency: 120,
-                Q: 5
+                Q: 2
             }
         }],
 
@@ -176,11 +176,17 @@ export function playCollision(collision) {
 
     // Make bats produce high note, walls a low note
     const note    = collision.object2.score !== undefined ? 58 + Math.random() + Math.random() : 52 + Math.random() + Math.random() ;
-    const impulse = toPolar([collision.impulse.x,collision.impulse.y])[0];
+
+    const impulse = collision.object2.score !== undefined ?
+        Math.abs(collision.impulse.x) + Math.abs(collision.impulse.y * 0.25) :
+        Math.abs(collision.impulse.y) + Math.abs(collision.impulse.x * 0.25) ;
+
     const voice   = collisionSynth
     .start(time, 3 * impulse / maxImpulse + note, impulse / maxImpulse)
     .stop(time + 0.06);
 
+    voice.get('osc-1').detune.setValueAtTime(-1045 + (Math.random() + Math.random()) * 200, time);
+    voice.get('osc-2').detune.setValueAtTime(632 + (Math.random() + Math.random()) * 300, time);
     voice.get('mix-1').pan.setValueAtTime(angle, time);
     voice.get('mix-2').pan.setValueAtTime(angle, time);
     voice.get('mix-3').pan.setValueAtTime(angle, time);
