@@ -110,14 +110,14 @@ const collisionSynthData = {
         __start: {
             'gain-envelope': {
                 gain: {
-                    2: { type: 'logarithmic', min: 0.00390625, max: 0.5 }
+                    2: { type: 'linear', min: 0.00390625, max: 0.5 }
                 }
             },
 
             'filter-envelope': {
                 gain: {
                     1: { type: 'scale', scale: 0.6 },
-                    2: { type: 'logarithmic', min: 240, max: 4000 }
+                    2: { type: 'logarithmic', min: 400, max: 2000 }
                 }
             },
 
@@ -152,15 +152,33 @@ var collisionSynth;
 
 stage
 .create('instrument', collisionSynthData)
-.then((node) => {
-    collisionSynth = node;
-    stage.createConnection(stage.identify(node), '0');
+.then((bonk) => {
+    collisionSynth = bonk;
+
+    stage
+    .create('compressor', {
+        threshold: -18,
+        ratio: 4,
+        knee: 8,
+        attack: 0.012,
+        release: 0.2
+    })
+    .then((compressor) => {
+        stage.createConnection(bonk, compressor);
+        stage.createConnection(compressor, '0');
+    });
 });
 
 function setPan(angle, voice) {
-console.log(angle, voice);
     voice.pan = angle;
     return angle;
+}
+
+window.bonk = function(velocity) {
+    const time = stage.context.currentTime;
+    const voice   = collisionSynth
+    .start(time, 58, velocity)
+    .stop(time + 0.06);
 }
 
 export function playCollision(collision) {
@@ -180,7 +198,7 @@ export function playCollision(collision) {
     const impulse = collision.object2.score !== undefined ?
         Math.abs(collision.impulse.x) + Math.abs(collision.impulse.y * 0.25) :
         Math.abs(collision.impulse.y) + Math.abs(collision.impulse.x * 0.25) ;
-
+console.log(impulse);
     const voice   = collisionSynth
     .start(time, 3 * impulse / maxImpulse + note, impulse / maxImpulse)
     .stop(time + 0.06);
